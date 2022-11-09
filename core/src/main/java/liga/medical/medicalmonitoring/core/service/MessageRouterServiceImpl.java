@@ -3,6 +3,7 @@ package liga.medical.medicalmonitoring.core.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import liga.medical.dto.MessageType;
 import liga.medical.dto.RabbitMessageDto;
+import liga.medical.dto.annotations.DbLog;
 import liga.medical.medicalmonitoring.core.api.MessageRouterService;
 import liga.medical.medicalmonitoring.core.api.MessageSenderService;
 import liga.medical.medicalmonitoring.core.model.MessageQueueNames;
@@ -18,12 +19,12 @@ public class MessageRouterServiceImpl implements MessageRouterService {
     private final MessageSenderService rabbitSenderService;
     private final ObjectMapper objectMapper;
 
-
     @Override
+    @DbLog
     public void routeMessage(String message) {
         try {
             RabbitMessageDto rabbitMessageDto = objectMapper.readValue(message, RabbitMessageDto.class);
-            MessageType messageType = rabbitMessageDto.getMessageType();
+            MessageType messageType = rabbitMessageDto.getType();
 
             switch (messageType) {
                 case DAILY:
